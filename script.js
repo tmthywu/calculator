@@ -34,6 +34,7 @@ operators.forEach((item) => {
         // one number available
         if (nums[0] === undefined) {
             nums[0] = +display.textContent;
+            display.textContent = +display.textContent;
             operator = e.currentTarget.textContent;
         } 
         
@@ -54,7 +55,7 @@ clear.addEventListener("click", (e) => {
     nums = [];
     operator = "";
     previousInput = false;
-    display.textContent = "";
+    display.textContent = "0";
 })
 
 function add(a, b) {
