@@ -25,7 +25,8 @@ body {
 button {
     width: 7vh;
     height: 6vh;
-    background: #d4d4d2;
+    background: #d4d4d2
+    ;
 }
 
 button#zero {
