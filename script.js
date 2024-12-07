@@ -4,9 +4,9 @@ let previousInput = false; // false = previous input is operator, true = previou
 
 let display = document.querySelector("#display");
 let numberButtons = Array.from(document.querySelectorAll(".number"));
-let operators = Array.from(document.querySelectorAll(".operator"));
-let singleOperators = Array.from(document.querySelectorAll(".singleOperator"));
-let clear = document.querySelector(".clear");
+let operatorButtons = Array.from(document.querySelectorAll(".operator"));
+let singleOperatorButtons = Array.from(document.querySelectorAll(".singleOperator"));
+let clearButton = document.querySelector(".clear");
 
 // adding numbers to the display when they're clicked
 numberButtons.forEach((item) => {
@@ -27,7 +27,7 @@ numberButtons.forEach((item) => {
 });
 
 // adding eventlisteners to operators; two-number operators
-operators.forEach((item) => {
+operatorButtons.forEach((item) => {
     item.addEventListener("click", (e) => {
         // one number available
         if (nums[0] === undefined) {
@@ -53,7 +53,7 @@ operators.forEach((item) => {
 });
 
 // single-number operators
-singleOperators.forEach((item) => {
+singleOperatorButtons.forEach((item) => {
     item.addEventListener("click", (e) => {
         let result = singleOperate(+display.textContent, e.currentTarget.textContent);
         display.textContent = result;
@@ -64,11 +64,51 @@ singleOperators.forEach((item) => {
 })
 
 // clear
-clear.addEventListener("click", () => {
+clearButton.addEventListener("click", () => {
     display.textContent = 0;
     nums = [];
     operator = "";
     previousInput = false;
+})
+
+// keyboard input
+window.addEventListener("keypress", (e) => {
+    console.log("key=" + e.key + " code=" + e.code);
+    let event = new Event("click");
+    let numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'];
+    let operators = ["+", "-", "*", "/", "="];
+    let singleOperators = ["±", "%"];
+    let clear = "Escape";
+    if (numbers.includes(e.key)) {
+        console.log("it's a number!");
+        numberButtons.forEach((item) => {
+            if (item.textContent === e.key) {
+                item.dispatchEvent(event);
+                return;
+            }
+        })
+    } else if (operators.includes(e.key) || e.key === "Enter") {
+        console.log("it's an operator!");
+        operatorButtons.forEach((item) => {
+            if (item.textContent === e.key || (item.textContent === "=" && e.key === "Enter")) {
+                item.dispatchEvent(event);
+                return;
+            }
+        })
+    } else if (singleOperators.includes(e.key)) {
+        console.log("it's a single operator!");
+        singleOperatorButtons.forEach((item) => {
+            if (item.textContent === e.key || item.textContent === "+/-" && e.key === "±") {
+                item.dispatchEvent(event);
+                return;
+            }
+        })
+    } else if (clear === e.key) {
+        console.log("it's a clear");
+        clearButton.dispatchEvent(event);
+    } else {
+        console.log("wtf");
+    }
 })
 
 function add(a, b) {
