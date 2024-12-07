@@ -5,7 +5,8 @@ let previousInput = false; // false = previous input is operator, true = previou
 let display = document.querySelector("#display");
 let numberButtons = Array.from(document.querySelectorAll(".number"));
 let operators = Array.from(document.querySelectorAll(".operator"));
-let clear = document.querySelector(".clear")
+let singleOperators = Array.from(document.querySelectorAll(".singleOperator"));
+let clear = document.querySelector(".clear");
 
 // adding numbers to the display when they're clicked
 numberButtons.forEach((item) => {
@@ -25,17 +26,13 @@ numberButtons.forEach((item) => {
     })
 });
 
-// adding eventlisteners to operators
+// adding eventlisteners to operators; two-number operators
 operators.forEach((item) => {
     item.addEventListener("click", (e) => {
-        // update previousInput
-        previousInput = false;
-        
         // one number available
         if (nums[0] === undefined) {
             nums[0] = +display.textContent;
             display.textContent = +display.textContent;
-            operator = e.currentTarget.textContent;
         } 
         
         // two numbers available
@@ -46,16 +43,32 @@ operators.forEach((item) => {
             // reset
             nums[0] = result;
             nums[1] = undefined;
-            operator = e.currentTarget.textContent;
         }
+
+        // reset operator
+        operator = e.currentTarget.textContent;
+        // update previousInput
+        previousInput = false;
     })
 });
 
-clear.addEventListener("click", (e) => {
+// single-number operators
+singleOperators.forEach((item) => {
+    item.addEventListener("click", (e) => {
+        let result = singleOperate(+display.textContent, e.currentTarget.textContent);
+        display.textContent = result;
+        nums = [];
+        operator = "";
+        previousInput = false;
+    })
+})
+
+// clear
+clear.addEventListener("click", () => {
+    display.textContent = 0;
     nums = [];
     operator = "";
     previousInput = false;
-    display.textContent = "0";
 })
 
 function add(a, b) {
@@ -85,5 +98,13 @@ function operate(a, b, operator) {
         return divide(a, b);
     } else if (operator === "=") {
         return b;
+    }
+}
+
+function singleOperate(a, operator) {
+    if (operator === "+/-") {
+        return -a;
+    } else if (operator === "%") {
+        return a/100;
     }
 }
